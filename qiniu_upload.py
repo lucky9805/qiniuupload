@@ -22,7 +22,7 @@ def upload():
         name,end = os.path.basename(localfile).split('.')
         print(name,end)
         m = md5(name.encode(encoding='utf-8')).hexdigest()
-        real_name = key + str(int(time.time())) + '_' + m + '.' + end
+        real_name = key + time.strftime("%Y-%m-%d_%H-%M", time.localtime())  + '_' + m + '.' + end
         print(real_name)
         # 生成上传 Token，可以指定过期时间等
         token = q.upload_token(bucket, real_name, 3600)
@@ -55,25 +55,41 @@ tips_text.set('还没开始!')
 top.title('上传文件')
 top.geometry('950x650')
 
-route.set('upload/images/')
+route.set('upload/imgages/')
 L1 = Label(top, text="附加文件前缀:").place(x=335, y=30)
 E1 = Entry(top, textvariable=route).place(x=450, y=30)
 L2 = Label(top, text="需要上传的文件:").place(x=5, y=73)
 L3 = Label(top, text="已上传的文件:").place(x=525, y=73)
 L3 = Label(top, text="目标空间:").place(x=5, y=30)
+
+# 左右ListBox
 LB_LEFT = Listbox(top, listvariable=upload_list, selectmode="extended", height=20, width=43)
 LB_RIGHT = Listbox(top, listvariable=completed_list, selectmode="browse", height=20, width=43)
-LB_LEFT.grid(row=10, column=1, padx=(5, 5), pady=100, sticky=tk.W)
-LB_RIGHT.grid(row=10, column=1, padx=(525, 5), pady=100, sticky=tk.E)
-# 下拉框
+LB_LEFT.place(x=5,y=100)
+LB_RIGHT.place(x=525,y=100)
+
+# 左列表横滚动条
+scrollbar_LEFT = tk.Scrollbar(top,orient=tk.HORIZONTAL)
+scrollbar_LEFT.place(x=5,y=524,width=390)
+scrollbar_LEFT.config(command = LB_LEFT.xview )
+LB_LEFT.config(xscrollcommand = scrollbar_LEFT.set)
+
+# 右列表横滚动条
+scrollbar_RIGHT = tk.Scrollbar(top,orient=tk.HORIZONTAL)
+scrollbar_RIGHT.place(x=525,y=524,width=390)
+scrollbar_RIGHT.config(command = LB_RIGHT.xview )
+LB_RIGHT.config(xscrollcommand = scrollbar_RIGHT.set)
+
+# 目标空间下拉框
 comboxlist = Combobox(top,textvariable=comvalue)
 comboxlist.place(x=85,y=30)
 comboxlist['values'] = bucket_name
 comboxlist.current(0)
+
 button = Button(top, text='选择文件', command=select_file).place(x=650, y=20)
-button = Button(top, text='全部上传', command=upload).place(x=430, y=300)
+button = Button(top, text='全部上传', command=upload).place(x=427, y=300)
 # 提示文本
-tips = Label(top,bg='green',width=40,textvariable=tips_text).place(x=250,y=530)
+tips = Label(top,bg='green',width=40,textvariable=tips_text).place(x=250,y=560)
 
 # 右键菜单
 class section:
