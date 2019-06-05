@@ -1,11 +1,11 @@
 #要上传的空间
-bucket_name = ['t-edge-video']
+bucket_name = ['bucket_name1','bucket_name2']
 
 #域名
-domain = 'http://ofadw524x.bkt.clouddn.com/'
+domain = 'http://[qiniu-bucket-domain]/'
 
-access_key = '3v5_ke67gD22uhdxf6Si_Lty21s2drVsLwdR07NH'
-secret_key = 'FSTVxNLEb50PQi1j4Ui0_sWqh8ntatKTMlfkOK80'
+access_key = '[qiniu_access_key]'
+secret_key = '[qiniu_secrect_key]'
 
 
 
