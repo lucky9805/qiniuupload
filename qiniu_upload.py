@@ -7,11 +7,19 @@ from tkinter import Label, Entry, Button, RIGHT, LEFT, BOTTOM, TOP, Tk, Listbox,
 from tkinter.ttk import Combobox
 import tkinter as tk
 import time
+import threading
+import platform
+
+
+def start():
+    new_thread = threading.Thread(target=upload,)
+    new_thread.start()
+
+
 
 # 上传
 def upload():
     global route, upload_list, completed_list,LB_LEFT,LB_RIGHT,tips_text,comboxlist
-    # 需要填写你的 Access Key 和 Secret Key
     # 构建鉴权对象
     q = Auth(access_key, secret_key)  # 上传后保存的文件名
     key = route.get()
@@ -87,7 +95,7 @@ comboxlist['values'] = bucket_name
 comboxlist.current(0)
 
 button = Button(top, text='选择文件', command=select_file).place(x=650, y=20)
-button = Button(top, text='全部上传', command=upload).place(x=427, y=300)
+button = Button(top, text='全部上传', command=start).place(x=427, y=300)
 # 提示文本
 tips = Label(top,bg='green',width=40,textvariable=tips_text).place(x=250,y=560)
 
@@ -102,6 +110,7 @@ class section:
 
     def onCopy(self):
         self.text = LB_RIGHT.get(tk.ACTIVE)
+        top.clipboard_clear()
         top.clipboard_append(self.text)
 
     # def onCut(self):
@@ -118,10 +127,12 @@ menu.add_separator()
 def popupmenu(event):
     menu.post(event.x_root, event.y_root)
 
-# Mac系统
-LB_RIGHT.bind("<Button-2>", popupmenu)
 
-# Win系统
-# LB_RIGHT.bind("<Button-3>", popupmenu)
+if platform.system() == 'Windows':
+    # Win系统
+    LB_RIGHT.bind("<Button-3>", popupmenu)
+else:
+    # Mac系统
+    LB_RIGHT.bind("<Button-2>", popupmenu)
 
 top.mainloop()
